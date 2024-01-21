@@ -1,0 +1,14 @@
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:4
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongodb:/data/db
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge
