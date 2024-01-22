@@ -31,6 +31,6 @@ const shopSchema = new Schema({
     type: Array,
     default: []
   }
-}, { timestamps: true, collation: COLLECTION_NAME });
+}, { timestamps: true, collection: COLLECTION_NAME });
 
 module.exports = model(DOCUMENT_NAME, shopSchema);
