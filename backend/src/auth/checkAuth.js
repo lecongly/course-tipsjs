@@ -48,5 +48,9 @@ const permission = (permission) => {
   }
 }
 
+const asyncHandler = (fn) => (req, res, next) => fn(req, res, next).catch((err) => {
+  next(err);
+});
 
-module.exports = { apiKey, permission };
+
+module.exports = { apiKey, permission, asyncHandler };
