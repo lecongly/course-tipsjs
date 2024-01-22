@@ -18,7 +18,7 @@ class AccessService {
   static signUp = async ({ name, email, password }) => {
       const holderShop = await shopModel.findOne({ email }).lean();
       if (holderShop) {
-        throw new BadRequestError('Email already exists' )
+        throw new BadRequestError('Email already exists')
       }
 
       const passwordHash = await bcrypt.hash(password, 10);
