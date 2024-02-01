@@ -1,0 +1,42 @@
+{
+  "env": {
+    "browser": false,
+    "commonjs": true,
+    "es6": true,
+    "mongo": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["node"],
+  "extends": ["eslint:recommended", "plugin:node/recommended", "airbnb/base"],
+  "rules": {
+    "linebreak-style": "off",
+    "global-require": "off",
+    "max-len": "off",
+    "no-unused-vars": ["warn", { "args": "none", "ignoreRestSiblings": true, "varsIgnorePattern": "^_" }],
+    "consistent-return": "off",
+    "no-param-reassign": "warn",
+    "no-console": "off",
+    "no-mixed-operators": "off",
+    "no-plusplus": "off",
+    "no-await-in-loop": "off",
+    "func-names": "off",
+    "arrow-parens": "off",
+    "camelcase": "off",
+    "no-underscore-dangle": "off",
+    "no-throw-literal": "off",
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "object-curly-newline": ["error", { "multiline": true }],
+    "class-methods-use-this": "off",
+    "comma-dangle": ["error", {"functions": "never"}],
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
+    "no-loop-func": "off"
+  }
+}

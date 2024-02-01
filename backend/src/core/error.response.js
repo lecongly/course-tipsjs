@@ -1,4 +1,5 @@
-const { StatusCodes, ReasonPhrases } = require('../utils/httpStatusCode')
+// eslint-disable-next-line max-classes-per-file
+const { StatusCodes, ReasonPhrases } = require('../utils/httpStatusCode');
 
 class ErrorResponse extends Error {
   constructor(message, status) {
@@ -31,9 +32,16 @@ class NotFoundError extends ErrorResponse {
   }
 }
 
+class ForbiddenError extends ErrorResponse {
+  constructor(message = ReasonPhrases.FORBIDDEN, status = StatusCodes.FORBIDDEN) {
+    super(message, status);
+  }
+}
+
 module.exports = {
   ConflictRequestError,
   BadRequestError,
   AuthFailureError,
-  NotFoundError
-}
+  NotFoundError,
+  ForbiddenError
+};

@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-
 const DOCUMENT_NAME = 'Key';
 const COLLECTION_NAME = 'Keys';
 
@@ -12,11 +11,11 @@ const keyTokenSchema = new Schema({
   },
   publicKey: {
     type: String,
-    required: true,
+    required: true
   },
   privateKey: {
     type: String,
-    required: true,
+    required: true
   },
   refreshTokensUsed: {
     type: Array,
@@ -24,7 +23,7 @@ const keyTokenSchema = new Schema({
   },
   refreshToken: {
     type: String,
-    required: true,
+    required: true
   }
 }, { timestamps: true, collection: COLLECTION_NAME });
 

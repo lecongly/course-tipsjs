@@ -1,7 +1,7 @@
 const express = require('express');
 const { apiKey, permission } = require('../auth/checkAuth');
-const router = express.Router();
 
+const router = express.Router();
 
 router.use(apiKey);
 router.use(permission('111'));

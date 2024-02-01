@@ -4,7 +4,7 @@ const dev = {
     port: process.env.DEV_DB_PORT || '27017',
     name: process.env.DEV_DB_NAME || 'shopDev'
   }
-}
+};
 
 const prod = {
   db: {
@@ -12,10 +12,10 @@ const prod = {
     port: process.env.PRO_DB_PORT || '27017',
     name: process.env.PRO_DB_NAME || 'shopPro'
   }
-}
+};
 
-const config = { dev, prod }
+const config = { dev, prod };
 
-const env = process.env.NODE_ENV || 'dev'
+const env = process.env.NODE_ENV || 'dev';
 
-module.exports = config[env]
+module.exports = config[env];

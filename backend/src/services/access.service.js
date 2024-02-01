@@ -1,11 +1,11 @@
-
-const shopModel = require('../models/shop.model');
+/* eslint-disable node/no-unsupported-features/node-builtins */
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const shopModel = require('../models/shop.model');
 const keyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('../auth/authUtils');
 const { getInfoData } = require('../utils');
-const { BadRequestError, AuthFailureError } = require('../core/error.response');
+const { BadRequestError, AuthFailureError, ForbiddenError } = require('../core/error.response');
 const { findByEmail } = require('./shop.service');
 
 const ShopRoles = {
@@ -13,13 +13,13 @@ const ShopRoles = {
   WRITER: '2',
   EDITOR: '3',
   ADMIN: '4'
-}
+};
 
 class AccessService {
-  static signUp = async ({ name, email, password }) => {
+  static async signUp({ name, email, password }) {
     const holderShop = await shopModel.findOne({ email }).lean();
     if (holderShop) {
-      throw new BadRequestError('Email already exists')
+      throw new BadRequestError('Email already exists');
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -42,12 +42,12 @@ class AccessService {
           type: 'pkcs1',
           format: 'pem'
         }
-      })
+      });
 
       const publicKeyString = await keyTokenService.createKeyToken({ userId: newShop._id, publicKey, privateKey });
 
       if (!publicKeyString) {
-        throw new BadRequestError('Error creating key token')
+        throw new BadRequestError('Error creating key token');
       }
 
       const publicKeyObject = crypto.createPublicKey(publicKeyString);
@@ -59,16 +59,16 @@ class AccessService {
           shop: getInfoData({ fields: ['_id', 'name', 'email'], object: newShop }),
           tokens
         }
-      }
+      };
     }
 
     return {
       code: 200,
       metadata: null
-    }
+    };
   }
 
-  static login = async ({ email, password }) => {
+  static async login({ email, password }) {
     const foundShop = await findByEmail({ email });
 
     if (!foundShop) {
@@ -90,7 +90,7 @@ class AccessService {
         type: 'pkcs1',
         format: 'pem'
       }
-    })
+    });
 
     const { _id: userId } = foundShop;
 
@@ -101,13 +101,40 @@ class AccessService {
     return {
       shop: getInfoData({ fields: ['_id', 'name', 'email'], object: foundShop }),
       tokens
-    }
-
+    };
   }
 
-  static logout = async (keyStore) => {
+  static async logout(keyStore) {
     const delKey = await keyTokenService.removeByKeyId(keyStore);
     return delKey;
+  }
+
+  static async handlerRefreshToken({ refreshToken, keyStore, user }) {
+    const { userId, email } = user;
+
+    if (keyStore.refreshTokensUsed.includes(refreshToken)) {
+      await keyTokenService.removeByUserId(userId);
+      throw new ForbiddenError('Refresh token has been used, pls login again');
+    }
+
+    if (keyStore.refreshToken !== refreshToken) {
+      throw new AuthFailureError('Invalid refresh token');
+    }
+
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) {
+      throw new AuthFailureError('Invalid refresh token');
+    }
+
+    // Create new tokens
+    const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey);
+
+    await keyStore.updateOne({ $set: { refreshToken: tokens.refreshToken }, $addToSet: { refreshTokensUsed: refreshToken } });
+
+    return {
+      user,
+      tokens
+    };
   }
 }
 

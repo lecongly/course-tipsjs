@@ -7,16 +7,16 @@ const shopSchema = new Schema({
   name: {
     type: String,
     trim: true,
-    maxLength: 150,
+    maxLength: 150
   },
   email: {
     type: String,
     trim: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   status: {
     type: String,
