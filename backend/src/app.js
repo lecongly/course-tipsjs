@@ -21,7 +21,7 @@ app.use('/', require('./routes'));
 
 // Error handler
 app.use((req, res, next) => {
-  const error = new Error('Not found');
+  const error = new Error('Route not found');
   error.status = 404;
   next(error);
 });
@@ -31,6 +31,7 @@ app.use((error, req, res, next) => {
   res.status(statusCode).json({
     status: 'error',
     code: statusCode,
+    // stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack,
     message: error.message || 'Internal server error'
   });
 });
